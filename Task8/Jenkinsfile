@@ -31,7 +31,7 @@ pipeline {
                             -Dsonar.projectVersion=1.0 ^
                             -Dsonar.sources=src ^
                             -Dsonar.host.url=${SONAR_HOST_URL} ^
-                            -Dsonar.login=${SONAR_TOKEN} sonar.login=sqa_a08cdb4d0d55e1a8894b3c1e095c0d18256c7d3d
+                            -Dsonar.login=${SONAR_TOKEN} sonar.login=squ_48d24fdc992d6539c3bfcd3804c0c33047ccb03e
 
                     """
                         }
