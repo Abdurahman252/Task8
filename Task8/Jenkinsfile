@@ -29,7 +29,7 @@ pipeline {
                                 mvn -f ${POM_PATH} sonar:sonar ^
                                     -Dsonar.projectKey=Task8a ^
                                     -Dsonar.host.url=${SONAR_HOST_URL} ^
-                                    -Dsonar.login=%SONAR_TOKEN%
+                                   -Dsonar.login=sqp_ef7918d3fb6011f2222b9bbbf2c11b331a60588a
                             """
                         }
                     }
