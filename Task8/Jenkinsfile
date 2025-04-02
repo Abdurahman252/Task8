@@ -7,8 +7,7 @@ pipeline {
 
     environment {
         POM_PATH = 'Task8/pom.xml' // Path to the parent POM file
-        SONAR_HOST_URL = 'http://your-sonarqube-server:9000' // Replace with your SonarQube URL
-        SONAR_LOGIN = credentials('sonar-token-id') // Use Jenkins credentials ID for SonarQube authentication
+        SONAR_HOST_URL = 'http://localhost:9000' // Change this to match your SonarQube URL
     }
 
     stages {
@@ -22,12 +21,29 @@ pipeline {
             steps {
                 script {
                     echo "Running SonarQube analysis..."
-                    bat """
-                        mvn -f ${POM_PATH} sonar:sonar ^
-                            -Dsonar.projectKey=Crisp_Navigation ^
-                            -Dsonar.host.url=${SONAR_HOST_URL} ^
-                            -Dsonar.login=${SONAR_LOGIN}
-                    """
+
+                    // Securely retrieve SonarQube credentials
+                    withSonarQubeEnv('SonarQube') {
+                        withCredentials([string(credentialsId: 'sonar-token-id', variable: 'SONAR_TOKEN')]) {
+                            bat """
+                                mvn -f ${POM_PATH} sonar:sonar ^
+                                    -Dsonar.projectKey=Task8a ^
+                                    -Dsonar.host.url=${SONAR_HOST_URL} ^
+                                    -Dsonar.login=%SONAR_TOKEN%
+                            """
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Quality Gate') {
+            steps {
+                script {
+                    echo "Waiting for SonarQube Quality Gate..."
+                    timeout(time: 2, unit: 'MINUTES') {
+                        waitForQualityGate abortPipeline: true
+                    }
                 }
             }
         }
