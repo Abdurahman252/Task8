@@ -18,19 +18,21 @@ pipeline {
         }
 
         stage('SonarQube Analysis') {
-            steps {
-                script {
-                    echo "Running SonarQube analysis..."
+    steps {
+        script {
+            echo "Running SonarQube analysis..."
 
-                    // Securely retrieve SonarQube credentials
-                    withSonarQubeEnv('SonarQube') {
-                        withCredentials([string(credentialsId: 'sonar-token-id', variable: 'SONAR_TOKEN')]) {
-                            bat """
-                                mvn -f ${POM_PATH} sonar:sonar ^
-                                    -Dsonar.projectKey=Task8a ^
-                                    -Dsonar.host.url=${SONAR_HOST_URL} ^
-                                    -Dsonar.login=${SONAR_TOKEN}
-                            """
+            withSonarQubeEnv('SonarQube') {
+                withCredentials([string(credentialsId: 'sonar-token-id', variable: 'SONAR_TOKEN')]) {
+                    bat """
+                        mvn -f ${POM_PATH} sonar:sonar ^
+                            -Dsonar.projectKey=Task8a ^
+                            -Dsonar.projectName=Task8a ^
+                            -Dsonar.projectVersion=1.0 ^
+                            -Dsonar.sources=src ^
+                            -Dsonar.host.url=${SONAR_HOST_URL} ^
+                            -Dsonar.login=${SONAR_TOKEN}
+                    """
                         }
                     }
                 }
